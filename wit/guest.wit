@@ -1,5 +1,5 @@
 interface incoming-handler {
-    use types.{message, error, topic};
+    use types.{client, error, message, topic};
 
     /// Whenever this guest receives a message in one of the subscribed topics, the message is
     /// sent to this handler. The guest is responsible for matching on the topic and handling the
@@ -7,6 +7,11 @@ interface incoming-handler {
     /// own decisions on how to handle errors returned from this function.
     handle: async func(message: message) -> result<_, error>;
 
+    /// A client-specific topic the guest subscribes to.
+    record client-topic {
+        client: client,
+        topic: topic,
+    }
 
     /// Server configuration.
     ///
@@ -14,7 +19,7 @@ interface incoming-handler {
     /// future.
     record configuration {
         /// Subscription topics
-        topics: list<topic>,
+        topics: list<client-topic>,
     }
 
     /// Configure is called by the runtime to get the server's runtime
